@@ -1,0 +1,13 @@
+# Example for documentation test4.job
+
+MODEL		rna1.rxnm
+NAME		doc5  	  
+OUTFOLDER	outs5	  
+OBSERVE		G1,M
+
+VARIATE		k01	linspace(1e-6,1e-2,50)
+VARIATE		k10	linspace(1e-6,1e-2,50)
+TYPE		SCANDET
+TYPE		SCANSS	      
+SCANTIME	100000
+SCANREP		50

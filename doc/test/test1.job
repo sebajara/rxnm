@@ -1,0 +1,14 @@
+# Example for documentation test1.job
+MODEL      rna1.rxnm      # model location
+OUTFOLDER  outs1/         # where 
+DOT        1              # Make a diagram of the model
+NAME       doc1
+OBSERVE    G0,G1,M
+TYPE       DET
+DETPOINTS  0:100:100000
+TYPE       ST
+STNREP     5
+STTPOINTS  0:1000:100000
+TYPE       SS
+SSNREP     2000
+SSTPOINTS  1000,10000,100000,500000

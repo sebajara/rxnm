@@ -1,0 +1,15 @@
+# Example for documentation test4.job
+
+MODEL		rna2.rxnm # Reaction model
+NAME		doc4  	  # Mnemonic Name
+OUTFOLDER	outs4	  # Output folder
+OBSERVE		M1,M2 # Species for plotting
+
+# Variate parameter and initial condition
+# Define their values
+VARIATE		G10	10:30
+VARIATE		G20	10:30
+TYPE		SCANDET	      # Set scan for deterministic
+#TYPE		SCANSS	      # Set scan for stochastc
+SCANTIME	100000        # Save the state at those times
+SCANREP		50	      # Number of replica simulations for stochastic
