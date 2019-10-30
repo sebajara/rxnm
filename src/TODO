@@ -1,0 +1,8 @@
+parsejob 
+   -> scatter plots for scan jobs.
+validmodel
+   -> check for types in dist and corr
+model2dot
+   -> add options for levels of connectivity
+
+save more stuff into the mat files

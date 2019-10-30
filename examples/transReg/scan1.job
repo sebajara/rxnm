@@ -1,0 +1,13 @@
+# You can add comments using hashtag
+
+NAME		scan1
+OUTFOLDER	scan1outs/
+MODEL		transReg.rxnm
+#DOT		1
+OBSERVE		A,L,X
+TYPE		SCANDET
+TYPE		SCANSS
+SCANTIME	500000
+SCANREP		200
+VARIATE		kmA	0.001:0.005:0.05
+

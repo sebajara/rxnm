@@ -1,0 +1,205 @@
+### Andrea's model as I interpreted her scripts from 07/2014
+
+## Parameters // units: [molecs,min,aa]
+
+P: s0     1.0e4               # External nutrients 
+P: vt     726.0               # max. nutrient import rate
+
+P: we     4.139               # max. enzyme transcription rate
+P: wr     930.0               # max. ribosome transcription rate
+P: wp     0                   # max. p-transcription rate
+P: wq     949.0               # max. q-transcription rate
+
+P: thetar 426.87              # ribosome transcription threshold
+P: thetax 4.380               # non-ribosomal transcription threshold
+
+P: nr     7549.0              # ribosome length
+P: nx     300.0               # length of non-ribosomal proteins
+
+P: gmax   1260                # max. transl. elongation rate
+P: Kp     180.1               # scaling transl. elongation threshold
+
+P: vm     5800                # max. enzymatic rate
+P: Km     1.0e3               # enzymatic MM const.
+P: ns     0.5                 # Nutrient to energy equivalents
+
+P: kq     1.522e+05           # q-autoinhibition threshold
+
+P: Kt     1.0e3               # nutrient import threshold
+P: nq     4                   # q-autoinhibition Hill coeff.
+
+P: cl     0                   # Chloramphenicol
+P: k_cm   0.005990            # chloramphenicol-binding rate
+
+## Rates
+P: b      0                   # 
+P: dm     0.1                 # mRNA-degradation rate
+P: kb     1                   # mRNA-ribosome binding rate
+P: ku     1                   # mRNA-ribosome unbinding rate
+
+## Species and init conditions
+
+S: si     0                   # Substrate
+S: a      1000.0              # ATP
+S: r      10.0                # Ribosomes
+
+S: mm     0                   # mRNA(m)
+S: mp     0                   # mRNA(p)
+S: mq     0                   # mRNA(q)
+S: mr     0                   # mRNA(r)
+S: mt     0                   # mRNA(t)
+
+S: rmm    0                   # Ribosome-mRNA(m)
+S: rmp    0                   # Ribosome-mRNA(p)
+S: rmq    0                   # Ribosome-mRNA(q)
+S: rmr    0                   # Ribosome-mRNA(r)
+S: rmt    0                   # Ribosome-mRNA(t)
+
+S: zmm    0                   #   
+S: zmr    0                   # 
+S: zmp    0                   # 
+S: zmq    0                   # 
+S: zmt    0                   # 
+
+S: em     0                   # Metabolic Enzyme
+S: et     1                   # Transporter
+S: ep     0                   # Growth-dep proteins
+S: Q      0                   # Growth-ind proteins
+
+## Mix variables (syntax sugar)
+P: M      1.0e8               # total cell mass
+V: f      cl*k_cm
+V: Kg     gmax/Kp
+V: gam    gmax*a/(Kg+a)
+V: ttrate (rmq+rmr+rmp+rmt+rmm)*gam
+V: lam    ttrate/M
+V: Mdyn   (nr*(r+rmr+rmp+rmt+rmm+rmq+zmr+zmp+zmt+zmm+zmq)+nx*(ep+Q+et+em))
+V: fr     nr*(r+rmr+rmp+rmt+rmm+rmq+zmr+zmp+zmt+zmm+zmq)/Mdyn
+V: nuimp  et*vt*s0/(Kt+s0)
+V: nucat  em*vm*si/(Km+si)
+
+## Reactions
+
+R:    => si                  # Nutrient import
+   nuimp
+R: si =>                     # Nutrient metabolism
+   nucat
+R:    => a                   # Nutrient metabolism
+   ns*nucat
+
+R:   => mm                    # Transcription mRNA(m)
+   we*a/(thetax+a)
+R:   => mp                    # Transcription mRNA(p)
+   wp*a/(thetax+a)
+R:   => mq                    # Transcription mRNA(q) # (wq*a/(thetax+a))/(1+(Q/kq)*(Q/kq)*(Q/kq)*(Q/kq)) 
+   (wq*a/(thetax+a))/(1+(Q/kq)^nq) 
+R:   => mr                    # Transcription mRNA(r)
+   wr*a/(thetar+a)
+R:   => mt                    # Transcription mRNA(t)
+   we*a/(thetax+a)
+
+R: r + mm <=> rmm             # Ribosome (un)binding mRNA(m)
+   kb*r*mm
+   ku*rmm
+R: r + mp <=> rmp             # Ribosome (un)binding mRNA(p)
+   kb*r*mp
+   ku*rmp
+R: r + mq <=> rmq             # Ribosome (un)binding mRNA(q)
+   kb*r*mq
+   ku*rmq
+R: r + mr <=> rmr             # Ribosome (un)binding mRNA(r)
+   kb*r*mr
+   ku*rmr
+R: r + mt <=> rmt             # Ribosome (un)binding mRNA(t)
+   kb*r*mt
+   ku*rmt
+
+R: rmm <=> zmm                # Ribosome-mRNA(m) cl (un)binding
+   f*rmm
+   b*zmm
+R: rmp <=> zmp                # Ribosome-mRNA(p) cl (un)binding
+   f*rmp
+   b*zmp
+R: rmq <=> zmq                # Ribosome-mRNA(q) cl (un)binding
+   f*rmq
+   b*zmq
+R: rmr <=> zmr                # Ribosome-mRNA(r) cl (un)binding
+   f*rmr
+   b*zmr
+R: rmt <=> zmt                # Ribosome-mRNA(t) cl (un)binding
+   f*rmt
+   b*zmt
+
+R: rmm => r + mm + em         # mRNA(m) translation
+   (gam/nx)*rmm
+R: rmp => r + mp + ep         # mRNA(p) translation
+   (gam/nx)*rmp
+R: rmq => r + mq + Q          # mRNA(q) translation
+   (gam/nx)*rmq
+R: rmr => 2 r + mr            # mRNA(r) translation
+   (gam/nr)*rmr
+R: rmt => r + mt + et         # mRNA(t) translation
+   (gam/nx)*rmt
+
+R: a  =>                      # ATP consumption
+   ttrate
+
+R: mm =>                      # mRNA(m) degradation
+   dm*mm
+R: mp =>                      # mRNA(p) degradation
+   dm*mp
+R: mq =>                      # mRNA(q) degradation
+   dm*mq
+R: mr =>                      # mRNA(r) degradation
+   dm*mr
+R: mt =>                      # mRNA(t) degradation
+   dm*mt
+
+R: si =>                      # Nutrient dilution
+   lam*si
+R: a  =>                      # ATP dilution
+   lam*a
+R: r  =>                      # Ribosome dilution
+   lam*r
+
+R: mm =>                      # mRNA(m) dilution
+   lam*mm
+R: mp =>                      # mRNA(p) dilution
+   lam*mp
+R: mq =>                      # mRNA(q) dilution
+   lam*mq
+R: mr =>                      # mRNA(r) dilution
+   lam*mr
+R: mt =>                      # mRNA(t) dilution
+   lam*mt
+
+R: rmm =>                     # Ribosome-mRNA(m) dilution
+   lam*rmm
+R: rmp =>                     # Ribosome-mRNA(p) dilution
+   lam*rmp
+R: rmq =>                     # Ribosome-mRNA(q) dilution
+   lam*rmq
+R: rmt =>                     # Ribosome-mRNA(t) dilution
+   lam*rmt
+R: rmr =>                     # Ribosome-mRNA(r) dilution
+   lam*rmr
+
+R: zmm =>                     # cl-Ribosome-mRNA(m) dilution
+   lam*zmm
+R: zmp =>                     # cl-Ribosome-mRNA(p) dilution
+   lam*zmp
+R: zmq =>                     # cl-Ribosome-mRNA(q) dilution
+   lam*zmq
+R: zmt =>                     # cl-Ribosome-mRNA(t) dilution
+   lam*zmt
+R: zmr =>                     # cl-Ribosome-mRNA(r)  dilution
+   lam*zmr
+
+R: em =>                      # Metabolic Enzyme dilution
+   lam*em
+R: et =>                      # Transporter dilution
+   lam*et
+R: ep =>                       # Growth-dep proteins dilution
+   lam*ep
+R: Q =>                       # Growth-ind proteins dilution
+   lam*Q

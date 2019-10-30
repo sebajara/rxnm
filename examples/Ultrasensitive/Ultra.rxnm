@@ -1,0 +1,36 @@
+P: k_cat 5.000000
+P: Vmax_off 100.000000
+P: kM 5.000000
+P: kM_off 5.000000
+P: k_cat2 5.000000
+P: kM2 5.000000
+P: Vmax_off2 100.000000
+P: kM_off2 5.000000
+P: k_cat3 5.000000
+P: kM3 5.000000
+P: Vmax_off3 100.000000
+P: kM_off3 5.000000
+
+S: E2_inactive 180.000000
+S: E2 0.000000
+S: E1 50.000000
+S: E3_inactive 180.000000
+S: E3 0.000000
+S: E4_inactive 180.000000
+S: E4 0.000000
+
+R: E2_inactive  => E2
+   k_cat*E2_inactive*E1/(kM+E2_inactive)
+R: E2 => E2_inactive 
+   Vmax_off*E2/(kM_off+E2)
+R: E3_inactive  => E3
+   k_cat2*E2*E3_inactive/(kM2+E3_inactive)
+R: E3 => E3_inactive 
+   Vmax_off2*E3/(kM_off2+E3)
+R: E4_inactive  => E4
+   k_cat3*E3*E4_inactive/(kM3+E4_inactive)
+R: E4 => E4_inactive 
+   Vmax_off3*E4/(kM_off3+E4)
+
+
+

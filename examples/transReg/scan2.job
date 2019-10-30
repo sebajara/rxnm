@@ -1,0 +1,14 @@
+# You can add comments using hashtag
+
+NAME		scan2
+OUTFOLDER	scan2outs/
+MODEL		transReg.rxnm
+#DOT		1
+OBSERVE		A,L,X
+TYPE		SCANDET
+TYPE		SCANSS
+SCANTIME	500000
+SCANREP		200
+VARIATE		GeneA0	1:20
+VARIATE		GeneL0	1:20
+

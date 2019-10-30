@@ -1,0 +1,125 @@
+S: GeneA0	10
+S: GeneX0	10
+S: GeneL0	10
+
+P: kX01		0.0001
+P: kX10		0.002
+
+P: kA01		0.0001
+P: kA10		0.002
+
+P: kL01		0.0001
+P: kL10		0.002
+
+P: kmA		0.5
+P: kmX		0.5
+P: kmL		0.01
+P: kmLDA	0.5
+
+P: kpX		0.0002
+P: kpA		0.0002
+P: kpL		0.0002
+
+P: gmX		0.0002
+P: gmA		0.0002
+P: gmL		0.0002
+
+P: gpX		0.00002
+P: gpA		0.00002
+P: gpDA		0.00002
+P: gpL		0.00002
+P: gpL2		0.00002
+P: gpL4		0.00002
+
+P: kfDA		0.002
+P: krDA		0.000001
+P: kfL2		0.01
+P: krL2		0.000001
+P: kfL4		0.001
+P: krL4		0.000001
+
+P: kfLDA	0.000001
+P: krLDA	0.0001
+P: kfXL4	0.00001
+P: krXL4	0.001
+
+R: GeneA0 <=> GeneA1
+   kA01*GeneA0
+   kA10*GeneA1
+
+R: GeneX0 <=> GeneX1
+   kX01*GeneX0
+   kX10*GeneX1
+
+R: GeneL0 <=> GeneL1
+   kL01*GeneL0
+   kL10*GeneL1
+
+R: GeneL1 + DA <=> GeneL_DA
+   kfLDA*GeneL1*DA
+   krLDA*GeneL_DA
+
+R: GeneX1 + L4 <=> GeneX_L4
+   kfXL4*GeneX1*L4
+   krXL4*GeneX_L4
+
+R: GeneA1 => GeneA1 + mA
+   kmA*GeneA1
+
+R: GeneX1 => GeneX1 + mX
+   kmX*GeneX1
+
+R: GeneL1 => GeneL1 + mL
+   kmL*GeneL1
+
+R: GeneL_DA => GeneL_DA + mL
+   kmLDA*GeneL_DA
+
+R: mA => mA + A
+   kpA*mA
+
+R: mX => mX + X
+   kpX*mX
+
+R: mL => mL + L
+   kpL*mL
+
+R: A <=> DA
+   kfDA*A
+   krDA*DA
+
+R: 2 L <=> L2
+   kfL2*(L^2)
+   krL2*L2
+
+R: 2 L2 <=> L4
+   kfL4*(L2^2)
+   krL4*L4
+
+R: mA =>
+   gmA*mA
+
+R: mX =>
+   gmX*mX
+
+R: mL =>
+   gmL*mL
+
+R: A =>
+   gpA*A
+
+R: X =>
+   gpX*X
+
+R: DA => 
+   gpDA*DA
+
+R: L =>
+   gpL*L
+
+R: L2 =>
+   gpL2*L2
+
+R: L4 =>
+   gpL4*L4
+

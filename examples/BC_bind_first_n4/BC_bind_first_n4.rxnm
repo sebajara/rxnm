@@ -1,0 +1,22 @@
+P: B_bind_C_on 1.000000
+P: B_bind_C_off 1.000000
+P: A_bind_BC_on 1.000000
+P: A_bind_BC_off 1.000000
+
+S: B 10.000000
+S: C 10.000000
+S: A 1.000000
+S: ABC 0.000000
+S: BC 0.000000
+
+R: B + C  => BC
+   B_bind_C_on*B*C
+R: BC => B + C 
+   B_bind_C_off*BC
+R: A + 4 BC  => ABC
+   A_bind_BC_on*A*BC^4
+R: ABC => A + 4 BC 
+   A_bind_BC_off*ABC
+
+
+
